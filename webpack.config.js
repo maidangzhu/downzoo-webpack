@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const eslintFormatterFriendly = require('eslint-formatter-friendly');
 
 module.exports = {
   mode: 'development',
@@ -25,7 +26,17 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        use: 'babel-loader'
+        use: 'babel-loader',
+      },
+      {
+        test: /\.js$/,
+        loader: 'eslint-loader',
+        enforce: 'pre',
+        include: [path.resolve(__dirname, 'src')],
+        exclude: /node_modules/,
+        options: {
+          format: eslintFormatterFriendly
+        },
       },
       {
         test: /\.css$/,
