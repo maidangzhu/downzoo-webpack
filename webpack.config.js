@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const eslintFormatterFriendly = require('eslint-formatter-friendly');
+const StyleLintPlugin = require('stylelint-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -21,6 +22,12 @@ module.exports = {
       filename: '[name].css',
       chunkFilename: '[id].css',
     }),
+    new StyleLintPlugin({
+      context: path.resolve(__dirname, 'src'),
+      files: ['*.css', '*.less'],
+      emitError: true, // 将错误发送给webpack
+      failOnError: true, // 有错误将终止webpack编译
+    }),
   ],
   module: {
     rules: [
@@ -32,10 +39,10 @@ module.exports = {
         test: /\.js$/,
         loader: 'eslint-loader',
         enforce: 'pre',
-        include: [path.resolve(__dirname, 'src')],
+        include: path.resolve(__dirname, 'src'),
         exclude: /node_modules/,
         options: {
-          format: eslintFormatterFriendly
+          format: eslintFormatterFriendly,
         },
       },
       {
@@ -52,7 +59,7 @@ module.exports = {
               modules: true,
             },
           },
-          'less-loader',
+          'less-loader', // 将 Less 编译为 CSS
           'postcss-loader',
         ],
       },
@@ -69,7 +76,6 @@ module.exports = {
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
-    clean: true,
   },
   optimization: {
     runtimeChunk: 'single',

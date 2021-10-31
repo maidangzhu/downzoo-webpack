@@ -1,4 +1,5 @@
 const autoprefixer = require('autoprefixer');
+
 module.exports = {
-    plugins: [autoprefixer(['IE 10'])]
+  plugins: [autoprefixer(['IE 10'])],
 };
