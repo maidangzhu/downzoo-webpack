@@ -5,7 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = {
   mode: 'development',
   entry: {
-    app: './src/babel.js',
+    app: './src/index.js',
   },
   devtool: 'inline-source-map',
   devServer: {
@@ -14,7 +14,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Hot Module Replacement',
+      title: 'Learn Webpack',
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
@@ -25,21 +25,7 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              presets: [
-                [
-                  '@babel/preset-env',
-                  {
-                    useBuiltIns: 'usage',
-                  },
-                ],
-              ],
-            },
-          },
-        ],
+        use: 'babel-loader'
       },
       {
         test: /\.css$/,
@@ -67,10 +53,10 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: ['.tsx', '.ts', '.js', '.jsx'],
   },
   output: {
-    filename: '[name].[contenthash].js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
