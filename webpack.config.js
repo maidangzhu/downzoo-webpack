@@ -22,7 +22,15 @@ module.exports = {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      }
     ],
+  },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js']
   },
   output: {
     filename: '[name].[contenthash].js',
@@ -31,5 +39,6 @@ module.exports = {
   },
   optimization: {
     runtimeChunk: 'single',
+    usedExports: true,
   },
 };
