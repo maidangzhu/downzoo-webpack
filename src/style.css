@@ -2,3 +2,11 @@
   width: 20px;
   height: 20px;
 }
+
+.bg-img {
+  background: url("~@assets/img/404.png") no-repeat;
+}
+
+.bg-img02 {
+  background: url("~@assets/img/haha.jpeg") no-repeat;
+}

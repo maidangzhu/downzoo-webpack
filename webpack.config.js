@@ -7,7 +7,7 @@ const StyleLintPlugin = require('stylelint-webpack-plugin');
 module.exports = {
   mode: 'development',
   entry: {
-    app: './src/index.js',
+    maidang: './src/index.js',
   },
   devtool: 'inline-source-map',
   devServer: {
@@ -17,6 +17,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Learn Webpack',
+      template: './src/index.html',
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
@@ -31,6 +32,10 @@ module.exports = {
   ],
   module: {
     rules: [
+      {
+        test: /\.html$/,
+        use: ['html-loader'],
+      },
       {
         test: /\.js$/,
         use: 'babel-loader',
@@ -47,7 +52,13 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+          },
+        ],
       },
       {
         test: /\.less$/,
@@ -68,14 +79,28 @@ module.exports = {
         use: 'ts-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.(png|svg|jpe?g|gif)$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 3 * 1024, // 3k
+          },
+        },
+        exclude: /node_modules/,
+      },
     ],
   },
   resolve: {
+    alias: {
+      '@assets': path.resolve(__dirname, './src/assets'),
+    },
     extensions: ['.tsx', '.ts', '.js', '.jsx'],
   },
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
+    // publicPath: 'http://www.downzoo.com/img/', // example
   },
   optimization: {
     runtimeChunk: 'single',
