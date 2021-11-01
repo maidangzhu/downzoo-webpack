@@ -8,12 +8,13 @@ const StyleLintPlugin = require('stylelint-webpack-plugin');
 module.exports = {
   mode: 'development',
   entry: {
-    main: './src/index.js',
+    entry: './src/index.jsx',
   },
   devtool: 'inline-source-map',
   devServer: {
     static: './dist',
-    port: 9000,
+    host: '127.0.0.1',
+    port: 8899,
     hot: true,
     proxy: {
       '/api': 'https://www.downzoo.com',
@@ -23,7 +24,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       title: 'Learn Webpack',
-      filename: '[name].html',
+      // filename: '[name].html',
       template: './src/index.html',
     }),
     new MiniCssExtractPlugin({
@@ -44,8 +45,20 @@ module.exports = {
         use: ['html-loader'],
       },
       {
-        test: /\.js$/,
-        use: 'babel-loader',
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            babelrc: false,
+            presets: [
+              // 添加 preset-react
+              require.resolve('@babel/preset-react'),
+              [require.resolve('@babel/preset-env'), { modules: false }],
+            ],
+            cacheDirectory: true,
+          },
+        },
       },
       {
         test: /\.js$/,
