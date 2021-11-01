@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const eslintFormatterFriendly = require('eslint-formatter-friendly');
@@ -7,16 +8,22 @@ const StyleLintPlugin = require('stylelint-webpack-plugin');
 module.exports = {
   mode: 'development',
   entry: {
-    maidang: './src/index.js',
+    main: './src/index.js',
   },
   devtool: 'inline-source-map',
   devServer: {
     static: './dist',
+    port: 9000,
     hot: true,
+    proxy: {
+      '/api': 'https://www.downzoo.com',
+    },
   },
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       title: 'Learn Webpack',
+      filename: '[name].html',
       template: './src/index.html',
     }),
     new MiniCssExtractPlugin({
