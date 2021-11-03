@@ -2,15 +2,16 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const eslintFormatterFriendly = require('eslint-formatter-friendly');
-const StyleLintPlugin = require('stylelint-webpack-plugin');
+const eslintFormatterFriendly = require('eslint-formatter-friendly'); // 检查eslint
+const StyleLintPlugin = require('stylelint-webpack-plugin'); // 检查style
+const TerserPlugin = require('terser-webpack-plugin'); // uglify
 
 module.exports = {
   mode: 'development',
   entry: {
     entry: './src/index.jsx',
   },
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   devServer: {
     static: './dist',
     host: '127.0.0.1',
@@ -24,12 +25,11 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       title: 'Learn Webpack',
-      // filename: '[name].html',
       template: './src/index.html',
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
-      chunkFilename: '[id].css',
+      chunkFilename: '[name].[contenthash:8].css',
     }),
     new StyleLintPlugin({
       context: path.resolve(__dirname, 'src'),
@@ -73,7 +73,13 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: '../',
+              hmr: process.env.NODE_ENV === 'development',
+            },
+          },
           'css-loader',
           {
             loader: 'postcss-loader',
@@ -121,9 +127,26 @@ module.exports = {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
     // publicPath: 'http://www.downzoo.com/img/', // example
+    sourceMapFilename: '[name].js.map',
   },
   optimization: {
     runtimeChunk: 'single',
     usedExports: true,
+    concatenateModules: true,
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        parallel: true, // 多线程
+        extractComments: false,
+        terserOptions: {
+          compress: {
+            unused: true,
+            drop_debugger: true,
+            drop_console: true,
+            dead_code: true,
+          },
+        },
+      }),
+    ],
   },
 };
