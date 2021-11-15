@@ -15,7 +15,7 @@ module.exports = {
   plugins: ['react', '@typescript-eslint'],
   rules: {
     // 禁止 console，要用写 eslint disable
-    'no-console': 2,
+    'no-console': 0,
     // 禁止 debugger，防止上线
     'no-debugger': 2,
     // 禁止 alert，要用写 eslint disable
